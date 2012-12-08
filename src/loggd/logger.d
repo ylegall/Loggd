@@ -63,7 +63,7 @@ class Logger : AbstractLogger
 			}
 			return nullLogger;
 		} else {
-			return LogManager.getInstance().getLogger(name);
+			return getLogger(name);
 		}
 	}
 
@@ -159,9 +159,7 @@ class Logger : AbstractLogger
 			//r.line = line;
 
 		foreach (handler; handlers) {
-			std.stdio.writeln("BEFORE");
 			handler.handle(m);
-			std.stdio.writeln("AFTER");
 		}
 		++count;
 	}

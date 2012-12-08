@@ -11,4 +11,3 @@ public {
 	import loggd.util;
 }
 
-

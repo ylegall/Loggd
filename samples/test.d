@@ -5,7 +5,8 @@ import std.stdio;
 
 void main()
 {
-	Logger logger = Logger.getLogger("core");
+	//auto logger = getLogger("core");
+	auto logger = getGlobalLogger();
 
 	logger.setLevel(Level.INFO);
 
