@@ -2,6 +2,7 @@
 module loggd.level;
 
 import loggd.core;
+import std.string;
 
 /**
  *
@@ -42,6 +43,34 @@ string getLevelString(Level l) {
 			return "ALL";
 		default:
 			return "";
+	}
+}
+
+/**
+ * Returns a Level from a string
+ */
+Level getLevel(string str)
+{
+	str = str.toUpper();
+	switch (str) {
+		case "OFF":
+			return Level.OFF;
+		case "FATAL":
+			return Level.FATAL;
+		case "ERROR":
+			return Level.ERROR;
+		case "WARN":
+			return Level.WARN;
+		case "INFO":
+			return Level.INFO;
+		case "DEBUG":
+			return Level.DEBUG;
+		case "TRACE":
+			return Level.TRACE;
+		case "ALL":
+			return Level.ALL;
+		default:
+			throw new Exception("invalid level: " ~ str);
 	}
 }
 

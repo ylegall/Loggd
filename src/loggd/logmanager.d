@@ -69,6 +69,9 @@ private Logger findParent(Logger l)
 	return root;
 }
 
+/**
+ * Load logging configuration from a json file.
+ */
 void loadConfiguration(string path)
 {
 	auto filename = path ~ "/loggd.json";
