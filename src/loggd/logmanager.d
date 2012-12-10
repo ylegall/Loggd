@@ -70,6 +70,17 @@ private Logger findParent(Logger l)
 }
 
 /**
+ *
+ */
+class LoggingException : Exception
+{
+	this(string message="") {
+		super(message);
+	}
+}
+
+
+/**
  * Load logging configuration from a json file.
  */
 void loadConfiguration(string path)
@@ -80,8 +91,68 @@ void loadConfiguration(string path)
 	}
 
 	auto json = parseJSON(to!string(read(filename)));
+	auto handlerList = json.object["handlers"];
+	loadHandlers(handlerList);
+	loadLoggers(json.object["loggers"]);
+}
 
-	readJson(json.object["logger"]);
+private void loadLoggers(JSONValue list)
+{
+	foreach (item; list.array) {
+		try {
+			auto obj = item.object;
+			Logger logger;
+
+			if ("name" in obj) {
+				logger = getLogger(obj["name"].str);
+			}
+
+			if ("level" in obj) {
+				logger.setLevel(getLevel(obj["level"].str));
+			}
+
+			if ("handlers" in obj) {
+				auto handlers = obj["handlers"].array;
+				foreach (h; handlers) {
+					if (h.str in handlerMap) {
+						logger.addHandler(handlerMap[h.str]);
+					}
+				}
+			}
+
+		} catch (LoggingException e) {
+			// TODO:
+			debug std.stdio.writeln("invalid logger configuration: ", e);
+		}
+	}
+}
+
+private void loadHandlers(JSONValue list)
+{
+	foreach (item; list.array) {
+		try {
+			auto obj = item.object;
+			Handler handler;
+
+			if ("type" in obj) {
+				handler = getHandler(obj["type"].str);
+			} else {
+				throw new LoggingException("Handler configuration must have a type attribute");
+			}
+
+			if ("level" in obj) {
+				handler.setLevel(getLevel(obj["level"].str));
+			}
+
+			if ("name" in obj) {
+				handlerMap[obj["name"].str] = handler;
+			}
+
+		} catch (LoggingException e) {
+			// TODO:
+			debug std.stdio.writeln("invalid handler configuration: ", e);
+		}
+	}
 }
 
 private void readJson(JSONValue obj)

@@ -18,7 +18,7 @@ abstract class Handler
 	/**
 	 *
 	 */
-	this(Level level, string fmt=DEFAULT_FORMAT) {
+	this(Level level=Level.INFO, string fmt=DEFAULT_FORMAT) {
 		this.level = level;
 		this.fmt = fmt;
 	}
@@ -35,6 +35,26 @@ abstract class Handler
 	void setFormat(string fmt) {
 		this.fmt = fmt;
 	}
+
+	void setLevel(Level level) {
+		this.level = level;
+	}
+}
+
+/**
+ * Return a new instance of a Handler from the specified string.
+ */
+Handler getHandler(string str="ConsoleHandler")
+{
+	switch (str)
+	{
+		case "ConsoleHandler":
+			return new ConsoleHandler();
+		case "FileHandler":
+			return new FileHandler();
+		default:
+			throw new Exception("unknown Handler type: " ~ str);
+	}
 }
 
 /**
@@ -42,8 +62,8 @@ abstract class Handler
  */
 class ConsoleHandler : Handler
 {
-	this(Level l, string fmt=DEFAULT_FORMAT) {
-		super(l, fmt);
+	this(Level level = Level.INFO, string fmt=DEFAULT_FORMAT) {
+		super(level, fmt);
 	}
 
 	override
@@ -60,10 +80,11 @@ class ConsoleHandler : Handler
 	}
 }
 
-class FileHandler
+class FileHandler : Handler
 {
 
 }
+
 
 unittest
 {
