@@ -10,7 +10,7 @@ import loggd.format;
  */
 abstract class Handler
 {
-	private {
+	protected {
 		Level level;
 		string fmt;
 	}
@@ -83,6 +83,24 @@ class ConsoleHandler : Handler
 class FileHandler : Handler
 {
 
+	protected {
+		File file;
+	}
+
+	this(string filename, Level level = Level.INFO, string fmt=DEFAULT_FORMAT) {
+		super(level, fmt);
+		file = File(filename, "w");
+	}
+
+	this(File f, Level level = Level.INFO, string fmt=DEFAULT_FORMAT) {
+		super(level, fmt);
+		file = f;
+	}
+
+	override void hande(Message m) {
+		if (m.level > this.level) return;
+		f.writeln(format(fmt, m));
+	}
 }
 
 
